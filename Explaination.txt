@@ -1,0 +1,154 @@
+const gameBoard = document.querySelector("#gameboard");
+const infoDisplay = document.querySelector("#info");
+// These lines select the elements with the IDs gameboard and info from the DOM and store them in variables gameBoard and infoDisplay, respectively.
+
+
+const startCells = ["", "", "", "", "", "", "", "", ""];
+// This array represents the initial state of the game board, with each element representing a cell on the board. An empty string "" indicates an empty cell.
+
+
+let go = "circle";
+infoDisplay.textContent = "Circle goes first";
+// The variable go keeps track of the current player's turn. It is initially set to "circle", indicating that it is the circle's turn. The textContent property of infoDisplay is set to display the message "Circle goes first".
+
+
+function createBoard() {
+  startCells.forEach((_cell, index) => {
+    const cellElement = document.createElement("div");
+    cellElement.classList.add("square");
+    cellElement.id = index;
+    gameBoard.appendChild(cellElement);
+    cellElement.addEventListener("click", addGo);
+  });
+}
+// The createBoard function creates the game board by iterating over the startCells array. For each cell, it creates a new <div> element, adds the CSS class "square" to it, assigns an id based on the index, appends it to the gameBoard element, and attaches a click event listener that calls the addGo function.
+
+
+function addGo(e) {
+  const goDisplay = document.createElement("div");
+  goDisplay.classList.add(go);
+  e.target.appendChild(goDisplay);
+
+  go = go === "circle" ? "cross" : "circle";
+  infoDisplay.textContent = "It is now " + go + "'s turn.";
+  e.target.removeEventListener("click", addGo);
+  checkScore();
+}
+// The addGo function is called when a player makes a move by clicking on a cell. It creates a new <div> element, adds the CSS class corresponding to the current player ("circle" or "cross"), appends it to the clicked cell (e.target), updates the go variable to switch to the next player's turn, updates the infoDisplay to indicate whose turn it is, removes the click event listener from the clicked cell, and calls the checkScore function to determine if a player has won the game.
+
+
+function checkScore() {
+  const allSquares = document.querySelectorAll(".square");
+
+  const winningCombos = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  winningCombos.forEach((array) => {
+    const circleWins = array.every(
+      (cell) =>
+        allSquares[cell].firstChild &&
+        allSquares[cell].firstChild.classList.contains("circle")
+    );
+
+    if (circleWins) {
+      infoDisplay.textContent = "Circle Wins!";
+      allSquares.forEach((square) => square.removeEventListener("click", addGo));
+      return;
+    }
+
+    const crossWins = array.every(
+      (cell) =>
+        allSquares[cell].firstChild &&
+        allSquares[cell].firstChild.classList.contains("cross")
+    );
+
+    if (crossWins) {
+      infoDisplay.textContent = "Cross Wins!";
+      allSquares.forEach((square) => square.removeEventListener("click", addGo));
+      return;
+    }
+  });
+}
+// The checkScore function is responsible for checking if a player has won the game. It iterates over the winningCombos array, which contains the winning combinations of cells on the game board. For each combination, it checks if every cell in the combination contains the class corresponding to the current player ("circle" or "cross"). If a winning condition is met, it updates the infoDisplay to declare the winner, removes the click event listeners from all cells to prevent further moves, and returns to exit the function.
+
+
+Extras***************************** and Errors*******************
+
+
+// const gameBoard =document.querySelector("#gameboard");
+// const infoDisplay =document.querySelector("#info");
+
+// const startCells=[
+//     "",  "",  "",  "",  "",  "",  "",  "",  ""
+// ]
+
+// let go ="circle"
+// infoDisplay.textContent = "Circle goes first"
+
+// function createboard(){
+//     startCells.forEach((_cell, index) =>{
+//        const cellElement= document.createElement('div')
+//        cellElement.classList.add('square')
+//        cellElement.id =index
+//        gameBoard.append(cellElement)
+//        cellElement.addEventListener('click', addGo)
+//     })
+// }
+
+// createboard()
+
+// function addGo(e){
+//     // console.log(e.target)
+// const goDisplay = document.createElement('div')
+// // goDisplay.classList.add('circle')
+// goDisplay.classList.add(go)
+// e.target.append(goDisplay)
+
+// go = go === "circle" ? "cross" : "circle"
+// infoDisplay.textContent = "It is now"+ go +"'s turn."
+// e.target.removeEventListener("click", addGo)
+// checkScore()
+// }
+
+// function checkScore() {
+//     const all = document.querySelectorAll(".square")
+//     // console.log(allSquares)
+//     const winningCombos =[
+//     [0,1,2], [3,4,5], [6,7,8],
+//     [0,3,6], [1,4,7], [2,5,8],
+//     [0,4,8], [2,4,6]
+
+//     ]
+
+//     winningCombos.forEach(array =>{
+//         const circleWins = array.every(cell =>
+//             allSquares[cell].firstChild?.classList.contains('circle'))
+
+//     if (circleWins){
+//         infoDisplay.textContent = "Circle Win"
+//         allSquares.forEach(square => square.replaceWith(square.cloneNode(true)))
+//         return
+//     }
+
+// })
+
+// winningCombos.forEach(array =>{
+//     const crossWins = array.every(cell =>
+//         allSquares[cell].firstChild?.classList.contains('cross'))
+
+// if (crossWins){
+//     infoDisplay.textContent = "Cross Win"
+//     allSquares.forEach(square => square.replaceWith(square.cloneNode(true)))
+//     return
+
+// })
+
+// }
